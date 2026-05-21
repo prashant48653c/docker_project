@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  front:
+    build: ./front
+    ports:
+      - "5173:5173"
+    depends_on:
+      - back
+    networks:
+      - mern-network
+
+  back:
+    build: ./back
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+    env_file:
+      - ./back/.env
+    networks:
+      - mern-network
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mern-network
+
+volumes:
+  mongo-data:
+    driver: local
+
+networks:
+  mern-network:
+    driver: bridge
